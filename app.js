@@ -148,15 +148,10 @@ function renderBars(target,map){
   const entries=Object.entries(map).sort((a,b)=>b[1]-a[1]), max=Math.max(...entries.map(e=>e[1]),1);
   el(target).innerHTML=entries.length?entries.map(([k,v])=>`<div class="bar-row"><span>${escapeHtml(k)}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(3,v/max*100)}%"></div></div><span class="bar-value">${fmt(v,settings.currency)}</span></div>`).join(''):'<div class="empty">データがありません。</div>';
 }
-function renderAnalysis(){
-  const t=totals(), now=new Date(); const paid=state.history.filter(h=>toDate(h.date).getFullYear()===now.getFullYear()).reduce((a,h)=>a+h.amount,0); const active=state.subscriptions.filter(s=>s.status!=='inactive');
-  el('analysisMonthly').textContent=fmt(t.monthly,settings.currency); el('analysisYearly').textContent=fmt(t.yearly,settings.currency); el('analysisPaid').textContent=fmt(paid,settings.currency); el('analysisAverage').textContent=fmt(active.length?t.monthly/active.length:0,settings.currency);
-  renderBars('categoryBars',groupMonthlyBy('category')); renderBars('paymentBars',groupMonthlyBy('paymentMethod'));
-}
-function renderAll(){ renderFilters(); renderDashboard(); renderSubscriptions(); renderCalendar(); renderHistory(); renderAnalysis(); }
+function renderAll(){ renderFilters(); renderDashboard(); renderSubscriptions(); renderCalendar(); renderHistory(); }
 function switchView(view){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===view)); document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
-  const titles={dashboard:['ダッシュボード','固定費の状況をひと目で確認できます。'],subscriptions:['サブスク','契約中・停止中のサービスを管理します。'],calendar:['カレンダー','支払予定を月単位で確認します。'],history:['支払履歴','これまでの支払いを確認します。'],analysis:['分析','カテゴリーや支払方法ごとに固定費を確認します。'],settings:['設定','表示とデータを管理します。']};
+  const titles={dashboard:['ダッシュボード','固定費の状況をひと目で確認できます。'],subscriptions:['サブスク','契約中・停止中のサービスを管理します。'],calendar:['カレンダー','支払予定を月単位で確認します。'],history:['支払履歴','これまでの支払いを確認します。'],settings:['設定','表示とデータを管理します。']};
   [el('pageTitle').textContent,el('pageSubtitle').textContent]=titles[view]; el('addSubscriptionBtn').style.display=view==='settings'?'none':'';
 }
 function openDialog(sub=null){

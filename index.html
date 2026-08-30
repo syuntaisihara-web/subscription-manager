@@ -4,10 +4,15 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0f172a" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="サブスク管理" />
   <title>サブスク管理</title>
-  <link rel="icon" type="image/png" href="app_icon.png?v=017" />
-  <link rel="apple-touch-icon" href="app_icon.png?v=017" />
-  <link rel="stylesheet" href="styles.css?v=017" />
+  <link rel="manifest" href="manifest.json?v=020" />
+  <link rel="icon" type="image/png" href="app_icon.png?v=020" />
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png?v=020" />
+  <link rel="stylesheet" href="styles.css?v=020" />
 </head>
 <body>
   <div class="app-shell">
@@ -26,7 +31,7 @@
         <button class="nav-item" data-view="history">支払履歴</button>
         <button class="nav-item" data-view="settings">設定</button>
       </nav>
-      <div class="sidebar-footer">Ver. 0.1.7</div>
+      <div class="sidebar-footer">Ver. 0.2.0</div>
     </aside>
 
     <main class="main">
@@ -92,19 +97,6 @@
         </article>
       </section>
 
-      <section id="analysis" class="view">
-        <div class="stats-grid analysis-stats">
-          <article class="stat-card"><span>月間固定費</span><strong id="analysisMonthly">¥0</strong></article>
-          <article class="stat-card"><span>年間固定費</span><strong id="analysisYearly">¥0</strong></article>
-          <article class="stat-card"><span>年間支払済み</span><strong id="analysisPaid">¥0</strong></article>
-          <article class="stat-card"><span>平均単価</span><strong id="analysisAverage">¥0</strong></article>
-        </div>
-        <div class="two-column">
-          <article class="panel"><div class="panel-head"><div><h2>カテゴリー別</h2><p>月額換算</p></div></div><div id="categoryBars" class="bars"></div></article>
-          <article class="panel"><div class="panel-head"><div><h2>支払方法別</h2><p>月額換算</p></div></div><div id="paymentBars" class="bars"></div></article>
-        </div>
-      </section>
-
       <section id="settings" class="view">
         <div class="settings-grid">
           <article class="panel">
@@ -155,6 +147,11 @@
   </dialog>
 
   <div id="toast" class="toast"></div>
-  <script src="app.js"></script>
+  <script src="app.js?v=020"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=020').catch(() => {}));
+    }
+  </script>
 </body>
 </html>
