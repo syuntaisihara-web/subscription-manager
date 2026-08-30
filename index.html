@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="サブスク管理" />
   <title>サブスク管理</title>
-  <link rel="manifest" href="manifest.json?v=020" />
+  <link rel="manifest" href="manifest.json?v=022" />
   <link rel="icon" type="image/png" href="app_icon.png?v=020" />
   <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png?v=020" />
   <link rel="stylesheet" href="styles.css?v=020" />
@@ -121,6 +121,7 @@
     <button class="mobile-nav-item active" data-view="dashboard">ホーム</button>
     <button class="mobile-nav-item" data-view="subscriptions">サブスク</button>
     <button class="mobile-nav-item" data-view="calendar">予定</button>
+    <button class="mobile-nav-item" data-view="history">履歴</button>
     <button class="mobile-nav-item" data-view="settings">設定</button>
   </nav>
 
@@ -147,10 +148,10 @@
   </dialog>
 
   <div id="toast" class="toast"></div>
-  <script src="app.js?v=020"></script>
+  <script src="app.js?v=022"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=020').catch(() => {}));
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=022').catch(() => {}));
     }
   </script>
 </body>

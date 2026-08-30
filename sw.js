@@ -1,11 +1,11 @@
-const CACHE_NAME = 'subscription-manager-v020';
+const CACHE_NAME = 'subscription-manager-v022';
 const APP_SHELL = [
   './',
   './index.html',
-  './styles.css?v=020',
-  './app.js?v=020',
-  './app_icon.png?v=020',
-  './manifest.json?v=020',
+  './styles.css?v=022',
+  './app.js?v=022',
+  './app_icon.png?v=022',
+  './manifest.json?v=022',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png'
