@@ -9,10 +9,10 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="サブスク管理" />
   <title>サブスク管理</title>
-  <link rel="manifest" href="manifest.json?v=022" />
+  <link rel="manifest" href="manifest.json?v=026" />
   <link rel="icon" type="image/png" href="app_icon.png?v=020" />
   <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png?v=020" />
-  <link rel="stylesheet" href="styles.css?v=024" />
+  <link rel="stylesheet" href="styles.css?v=026" />
 </head>
 <body>
   <div class="app-shell">
@@ -119,10 +119,10 @@
   </dialog>
 
   <div id="toast" class="toast"></div>
-  <script src="app.js?v=024"></script>
+  <script src="app.js?v=026"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=024').catch(() => {}));
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=026').catch(() => {}));
     }
   </script>
 </body>

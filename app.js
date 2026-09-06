@@ -14,10 +14,29 @@ let settings = loadSettings();
 
 const el = id => document.getElementById(id);
 
+function normalizeSubscription(s={}){
+  return {
+    id: String(s.id || ('s'+Date.now()+Math.random().toString(36).slice(2))),
+    name: String(s.name || ''),
+    category: String(s.category || '未分類'),
+    paymentMethod: String(s.paymentMethod || '未設定'),
+    price: Number.isFinite(Number(s.price)) ? Number(s.price) : 0,
+    currency: String(s.currency || 'JPY'),
+    cycle: ['monthly','yearly','weekly','custom'].includes(s.cycle) ? s.cycle : 'monthly',
+    customInterval: Math.max(1, Number(s.customInterval) || 1),
+    customUnit: ['days','months','years'].includes(s.customUnit) ? s.customUnit : 'months',
+    startDate: String(s.startDate || ''),
+    status: ['active','planned','inactive'].includes(s.status) ? s.status : 'active',
+    memo: String(s.memo || '')
+  };
+}
 function loadState(){
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return saved && Array.isArray(saved.subscriptions) ? {subscriptions:saved.subscriptions} : structuredClone(sample);
+    if(saved && Array.isArray(saved.subscriptions)){
+      return {subscriptions:saved.subscriptions.map(normalizeSubscription)};
+    }
+    return structuredClone(sample);
   } catch { return structuredClone(sample); }
 }
 function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); renderAll(); }
@@ -117,7 +136,35 @@ function escapeAttr(s=''){return escapeHtml(s);}
 // navigation
 document.addEventListener('click',e=>{const view=e.target.closest('[data-view]')?.dataset.view;if(view)switchView(view);const jump=e.target.closest('[data-jump]')?.dataset.jump;if(jump)switchView(jump);const action=e.target.closest('[data-action]');if(action){const id=action.dataset.id;if(action.dataset.action==='edit')openDialog(state.subscriptions.find(s=>s.id===id));if(action.dataset.action==='delete')deleteSub(id);}});
 el('addSubscriptionBtn').addEventListener('click',()=>openDialog()); el('closeDialogBtn').addEventListener('click',closeDialog); el('cancelDialogBtn').addEventListener('click',closeDialog); el('cycleInput').addEventListener('change',toggleCustom);
-el('subscriptionForm').addEventListener('submit',e=>{e.preventDefault(); const id=el('subscriptionId').value||'s'+Date.now(); const item={id,name:el('nameInput').value.trim(),category:el('categoryInput').value.trim()||'未分類',paymentMethod:el('paymentMethodInput').value.trim()||'未設定',price:Number(el('priceInput').value),currency:el('itemCurrencyInput').value,cycle:el('cycleInput').value,customInterval:Number(el('customIntervalInput').value)||1,customUnit:el('customUnitInput').value,startDate:el('startDateInput').value,status:el('statusInput').value,memo:el('memoInput').value.trim()}; const i=state.subscriptions.findIndex(s=>s.id===id); if(i>=0)state.subscriptions[i]=item; else state.subscriptions.push(item); saveState(); closeDialog(); toast(i>=0?'更新しました。':'追加しました。');});
+el('subscriptionForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const name=el('nameInput').value.trim();
+  const price=Number(el('priceInput').value);
+  if(!name){ alert('サービス名を入力してください。'); return; }
+  if(!Number.isFinite(price) || price < 0){ alert('料金を正しく入力してください。'); return; }
+  const id=el('subscriptionId').value||('s'+Date.now()+Math.random().toString(36).slice(2));
+  const item=normalizeSubscription({
+    id,
+    name,
+    category:el('categoryInput').value.trim()||'未分類',
+    paymentMethod:el('paymentMethodInput').value.trim()||'未設定',
+    price,
+    currency:el('itemCurrencyInput').value,
+    cycle:el('cycleInput').value,
+    customInterval:Number(el('customIntervalInput').value)||1,
+    customUnit:el('customUnitInput').value,
+    startDate:el('startDateInput').value,
+    status:el('statusInput').value,
+    memo:el('memoInput').value.trim()
+  });
+  const i=state.subscriptions.findIndex(s=>s.id===id);
+  if(i>=0) state.subscriptions[i]=item; else state.subscriptions.push(item);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  closeDialog();
+  renderAll();
+  switchView('subscriptions');
+  toast(i>=0?'更新しました。':'追加しました。');
+});
 ['searchInput','statusFilter','categoryFilter','sortSelect'].forEach(id=>el(id).addEventListener('input',renderSubscriptions));
 el('backupBtn').addEventListener('click',backup);
 el('restoreInput').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(!Array.isArray(data.subscriptions))throw new Error();state={subscriptions:data.subscriptions};saveState();toast('復元しました。');}catch{alert('バックアップファイルを読み込めませんでした。');}e.target.value='';});
