@@ -12,13 +12,13 @@
   <link rel="manifest" href="manifest.json?v=022" />
   <link rel="icon" type="image/png" href="app_icon.png?v=020" />
   <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png?v=020" />
-  <link rel="stylesheet" href="styles.css?v=020" />
+  <link rel="stylesheet" href="styles.css?v=024" />
 </head>
 <body>
   <div class="app-shell">
     <aside class="sidebar">
       <div class="brand">
-        <div class="brand-mark"><img src="app_icon.png?v=017" alt="サブスク管理" /></div>
+        <div class="brand-mark"><img src="app_icon.png?v=023" alt="サブスク管理" /></div>
         <div>
           <div class="brand-title">サブスク管理</div>
           <div class="brand-sub">Subscription Manager</div>
@@ -27,11 +27,9 @@
       <nav id="sideNav" class="nav-list">
         <button class="nav-item active" data-view="dashboard">ダッシュボード</button>
         <button class="nav-item" data-view="subscriptions">サブスク</button>
-        <button class="nav-item" data-view="calendar">カレンダー</button>
-        <button class="nav-item" data-view="history">支払履歴</button>
         <button class="nav-item" data-view="settings">設定</button>
       </nav>
-      <div class="sidebar-footer">Ver. 0.2.0</div>
+      <div class="sidebar-footer">Ver. 0.2.4</div>
     </aside>
 
     <main class="main">
@@ -48,13 +46,12 @@
           <article class="stat-card"><span>月間固定費</span><strong id="monthlyTotal">¥0</strong><small>月額換算</small></article>
           <article class="stat-card"><span>年間固定費</span><strong id="yearlyTotal">¥0</strong><small>現在の契約ベース</small></article>
           <article class="stat-card"><span>契約サービス</span><strong id="activeCount">0件</strong><small>契約中</small></article>
-          <article class="stat-card"><span>今月の支払予定</span><strong id="thisMonthTotal">¥0</strong><small id="thisMonthLabel"></small></article>
         </div>
 
         <div class="two-column">
           <article class="panel">
-            <div class="panel-head"><div><h2>今後の支払い</h2><p>次回支払日が近い順</p></div></div>
-            <div id="upcomingList" class="list"></div>
+            <div class="panel-head"><div><h2>支払方法別</h2><p>月額換算の内訳</p></div></div>
+            <div id="paymentMethodBars" class="bars"></div>
           </article>
           <article class="panel">
             <div class="panel-head"><div><h2>カテゴリー別</h2><p>月額換算の構成比</p></div></div>
@@ -73,28 +70,9 @@
           <input id="searchInput" class="input" type="search" placeholder="サービス名を検索" />
           <select id="statusFilter" class="input"><option value="all">すべての状態</option><option value="active">契約中</option><option value="planned">解約予定</option><option value="inactive">停止中</option></select>
           <select id="categoryFilter" class="input"><option value="all">すべてのカテゴリー</option></select>
-          <select id="sortSelect" class="input"><option value="next">次回支払日順</option><option value="priceDesc">金額が高い順</option><option value="name">サービス名順</option></select>
+          <select id="sortSelect" class="input"><option value="priceDesc">金額が高い順</option><option value="name">サービス名順</option></select>
         </div>
         <article class="panel"><div id="subscriptionTable" class="table-wrap"></div></article>
-      </section>
-
-      <section id="calendar" class="view">
-        <article class="panel">
-          <div class="calendar-head">
-            <button id="prevMonth" class="icon-btn">‹</button>
-            <h2 id="calendarTitle"></h2>
-            <button id="nextMonth" class="icon-btn">›</button>
-          </div>
-          <div class="calendar-week"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div>
-          <div id="calendarGrid" class="calendar-grid"></div>
-        </article>
-      </section>
-
-      <section id="history" class="view">
-        <article class="panel">
-          <div class="panel-head"><div><h2>支払履歴</h2><p>「支払済みにする」で履歴に追加されます。</p></div><button id="exportCsvBtn" class="secondary-btn">CSV出力</button></div>
-          <div id="historyTable" class="table-wrap"></div>
-        </article>
       </section>
 
       <section id="settings" class="view">
@@ -120,8 +98,6 @@
   <nav class="mobile-nav">
     <button class="mobile-nav-item active" data-view="dashboard">ホーム</button>
     <button class="mobile-nav-item" data-view="subscriptions">サブスク</button>
-    <button class="mobile-nav-item" data-view="calendar">予定</button>
-    <button class="mobile-nav-item" data-view="history">履歴</button>
     <button class="mobile-nav-item" data-view="settings">設定</button>
   </nav>
 
@@ -139,7 +115,6 @@
         <label class="field custom-cycle hidden"><span>カスタム間隔</span><input id="customIntervalInput" class="input" type="number" min="1" value="2" /></label>
         <label class="field custom-cycle hidden"><span>単位</span><select id="customUnitInput" class="input"><option value="months">か月</option><option value="days">日</option><option value="years">年</option></select></label>
         <label class="field"><span>契約開始日</span><input id="startDateInput" class="input" type="date" /></label>
-        <label class="field"><span>次回支払日 *</span><input id="nextDateInput" class="input" type="date" required /></label>
         <label class="field"><span>状態</span><select id="statusInput" class="input"><option value="active">契約中</option><option value="planned">解約予定</option><option value="inactive">停止中</option></select></label>
         <label class="field full"><span>メモ</span><textarea id="memoInput" class="input" rows="3" placeholder="任意"></textarea></label>
       </div>
@@ -148,10 +123,10 @@
   </dialog>
 
   <div id="toast" class="toast"></div>
-  <script src="app.js?v=022"></script>
+  <script src="app.js?v=024"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=022').catch(() => {}));
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=024').catch(() => {}));
     }
   </script>
 </body>
