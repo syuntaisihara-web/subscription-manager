@@ -9,10 +9,10 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="サブスク管理" />
   <title>サブスク管理</title>
-  <link rel="manifest" href="manifest.json?v=026" />
+  <link rel="manifest" href="manifest.json?v=027" />
   <link rel="icon" type="image/png" href="app_icon.png?v=020" />
   <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png?v=020" />
-  <link rel="stylesheet" href="styles.css?v=026" />
+  <link rel="stylesheet" href="styles.css?v=027" />
 </head>
 <body>
   <div class="app-shell">
@@ -42,11 +42,23 @@
       </header>
 
       <section id="dashboard" class="view active">
-        <div class="stats-grid">
-          <article class="stat-card"><span>月間固定費</span><strong id="monthlyTotal">¥0</strong><small>月額換算</small></article>
-          <article class="stat-card"><span>年間固定費</span><strong id="yearlyTotal">¥0</strong><small>現在の契約ベース</small></article>
-          <article class="stat-card"><span>契約サービス</span><strong id="activeCount">0件</strong><small>契約中</small></article>
-        </div>
+        <article class="summary-card">
+          <div class="summary-metric">
+            <span>月間費用</span>
+            <strong id="monthlyTotal">¥0</strong>
+            <small>月額換算</small>
+          </div>
+          <div class="summary-metric">
+            <span>年間費用</span>
+            <strong id="yearlyTotal">¥0</strong>
+            <small>現在の契約ベース</small>
+          </div>
+          <div class="summary-metric">
+            <span>契約サービス</span>
+            <strong id="activeCount">0件</strong>
+            <small>契約中</small>
+          </div>
+        </article>
 
         <div class="two-column">
           <article class="panel">
@@ -119,10 +131,10 @@
   </dialog>
 
   <div id="toast" class="toast"></div>
-  <script src="app.js?v=026"></script>
+  <script src="app.js?v=027"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=026').catch(() => {}));
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=027').catch(() => {}));
     }
   </script>
 </body>
