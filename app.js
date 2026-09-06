@@ -57,7 +57,6 @@ function renderDashboard(){
   el('monthlyTotal').textContent=fmt(t.monthly,settings.currency);
   el('yearlyTotal').textContent=fmt(t.yearly,settings.currency);
   el('activeCount').textContent=`${t.count}件`;
-  renderBars('paymentMethodBars',groupMonthlyBy('paymentMethod'));
   renderCategoryDonut();
   el('dashboardSubscriptions').innerHTML=tableHtml(state.subscriptions.filter(s=>s.status==='active').slice(0,5),true);
 }
