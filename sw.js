@@ -1,4 +1,4 @@
-const CACHE_NAME = 'subscription-manager-v0210';
+const CACHE_NAME = 'subscription-manager-v0211';
 const APP_SHELL = [
   './',
   './index.html',

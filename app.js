@@ -52,6 +52,13 @@ function fmt(amount, currency='JPY'){
 function toDate(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
 function dateText(s){ if(!s) return '-'; return new Intl.DateTimeFormat('ja-JP',{year:'numeric',month:'short',day:'numeric'}).format(toDate(s)); }
 function statusLabel(s){ return s==='active'?'契約中':s==='planned'?'解約予定':'停止中'; }
+// Exchange rates: approximate JPY base rates. These can be updated in this table when rates change.
+const JPY_PER_UNIT = {JPY:1, USD:150, EUR:165};
+function toBaseCurrency(amount, fromCurrency, baseCurrency){
+  const from=JPY_PER_UNIT[fromCurrency] || 1;
+  const base=JPY_PER_UNIT[baseCurrency] || 1;
+  return Number(amount || 0) * from / base;
+}
 function monthlyEquivalent(sub){
   if(sub.status==='inactive') return 0;
   if(sub.cycle==='monthly') return sub.price;
@@ -62,7 +69,6 @@ function monthlyEquivalent(sub){
   if(sub.customUnit==='years') return sub.price/(n*12);
   return sub.price*(365/n)/12;
 }
-function yearlyEquivalent(sub){ return monthlyEquivalent(sub)*12; }
 function totals(){
   const active=state.subscriptions.filter(s=>s.status!=='inactive');
   return {
