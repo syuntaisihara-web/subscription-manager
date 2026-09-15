@@ -69,11 +69,21 @@ function monthlyEquivalent(sub){
   if(sub.customUnit==='years') return sub.price/(n*12);
   return sub.price*(365/n)/12;
 }
+function yearlyEquivalent(sub){
+  if(sub.status==='inactive') return 0;
+  if(sub.cycle==='monthly') return sub.price*12;
+  if(sub.cycle==='yearly') return sub.price;
+  if(sub.cycle==='weekly') return sub.price*52;
+  const n=Math.max(1,Number(sub.customInterval)||1);
+  if(sub.customUnit==='months') return sub.price*12/n;
+  if(sub.customUnit==='years') return sub.price/n;
+  return sub.price*(365/n);
+}
 function totals(){
   const active=state.subscriptions.filter(s=>s.status!=='inactive');
   return {
-    monthly:active.reduce((a,s)=>a+monthlyEquivalent(s),0),
-    yearly:active.reduce((a,s)=>a+yearlyEquivalent(s),0),
+    monthly:active.reduce((a,s)=>a+toBaseCurrency(monthlyEquivalent(s),s.currency,settings.currency),0),
+    yearly:active.reduce((a,s)=>a+toBaseCurrency(yearlyEquivalent(s),s.currency,settings.currency),0),
     count:state.subscriptions.filter(s=>s.status==='active').length
   };
 }
@@ -106,7 +116,7 @@ function renderFilters(){
   const pms=[...new Set(state.subscriptions.map(s=>s.paymentMethod).filter(Boolean))].sort(); el('paymentMethodList').innerHTML=pms.map(p=>`<option value="${escapeAttr(p)}"></option>`).join('');
 }
 function groupMonthlyBy(key){
-  const map={}; state.subscriptions.filter(s=>s.status!=='inactive').forEach(s=>{const k=s[key]||'未設定'; map[k]=(map[k]||0)+monthlyEquivalent(s);}); return map;
+  const map={}; state.subscriptions.filter(s=>s.status!=='inactive').forEach(s=>{const k=s[key]||'未設定'; map[k]=(map[k]||0)+toBaseCurrency(monthlyEquivalent(s),s.currency,settings.currency);}); return map;
 }
 function renderCategoryDonut(){
   const map=groupMonthlyBy('category'), entries=Object.entries(map).sort((a,b)=>b[1]-a[1]);
