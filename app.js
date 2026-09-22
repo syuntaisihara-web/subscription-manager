@@ -93,10 +93,13 @@ function renderDashboard(){
   el('yearlyTotal').textContent=fmt(t.yearly,settings.currency);
   el('activeCount').textContent=`${t.count}件`;
   renderCategoryDonut();
-  const top5=state.subscriptions
+  // ダッシュボードは既存のstate配列を直接sortせず、コピーを作って月額換算額の高い順に上位5件を表示する。
+  const top5 = state.subscriptions
     .filter(s=>s.status==='active')
-    .sort((a,b)=>toBaseCurrency(monthlyEquivalent(b),b.currency,settings.currency)-toBaseCurrency(monthlyEquivalent(a),a.currency,settings.currency))
-    .slice(0,5);
+    .map(s=>({sub:s, monthlyJpy:toBaseCurrency(monthlyEquivalent(s),s.currency,settings.currency)}))
+    .sort((a,b)=>b.monthlyJpy-a.monthlyJpy)
+    .slice(0,5)
+    .map(x=>x.sub);
   el('dashboardSubscriptions').innerHTML=tableHtml(top5,true);
 }
 function cycleLabel(s){
