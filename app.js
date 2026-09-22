@@ -93,7 +93,11 @@ function renderDashboard(){
   el('yearlyTotal').textContent=fmt(t.yearly,settings.currency);
   el('activeCount').textContent=`${t.count}件`;
   renderCategoryDonut();
-  el('dashboardSubscriptions').innerHTML=tableHtml(state.subscriptions.filter(s=>s.status==='active').slice(0,5),true);
+  const top5=state.subscriptions
+    .filter(s=>s.status==='active')
+    .sort((a,b)=>toBaseCurrency(monthlyEquivalent(b),b.currency,settings.currency)-toBaseCurrency(monthlyEquivalent(a),a.currency,settings.currency))
+    .slice(0,5);
+  el('dashboardSubscriptions').innerHTML=tableHtml(top5,true);
 }
 function cycleLabel(s){
   if(s.cycle==='monthly') return '毎月'; if(s.cycle==='yearly') return '毎年'; if(s.cycle==='weekly') return '毎週';
